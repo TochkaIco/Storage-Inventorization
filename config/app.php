@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -121,6 +123,10 @@ return [
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
+    ],
+
+    'dev_info' => [
+        'component_docs' => env('COMPONENT_DOCS', 'https://www.google.com/search?channel=entpr&q=value+not+set'),
     ],
 
 ];

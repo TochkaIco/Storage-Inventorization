@@ -1,28 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Settings;
 
-use App\Concerns\PasswordValidationRules;
 use App\Livewire\Actions\Logout;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class DeleteUserForm extends Component
 {
-    use PasswordValidationRules;
-
-    public string $password = '';
+    public string $confirmation = '';
 
     /**
      * Delete the currently authenticated user.
+     *
+     * @throws ConnectionException
      */
     public function deleteUser(Logout $logout): void
     {
+        $user = Auth::user();
+
         $this->validate([
-            'password' => $this->currentPasswordRules(),
+            'confirmation' => ['required', 'string', 'in:DELETE'],
+        ], [
+            'confirmation.in' => __('Please enter "DELETE" to confirm your account deletion.'),
         ]);
 
-        tap(Auth::user(), $logout(...))->delete();
+        $user->delete();
+        $logout();
 
         $this->redirect('/', navigate: true);
     }

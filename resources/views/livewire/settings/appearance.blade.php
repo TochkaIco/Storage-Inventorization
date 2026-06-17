@@ -1,4 +1,10 @@
 <section class="w-full">
+    <flux:breadcrumbs class="mb-6">
+        <flux:breadcrumbs.item href="{{ route('home') }}" icon="home" />
+        <flux:breadcrumbs.item href="{{ route('profile.edit') }}">{{ __('Settings') }}</flux:breadcrumbs.item>
+        <flux:breadcrumbs.item href="{{ route('appearance.edit') }}">{{ __('Appearance') }}</flux:breadcrumbs.item>
+    </flux:breadcrumbs>
+
     @include('partials.settings-heading')
 
     <flux:heading class="sr-only">{{ __('Appearance settings') }}</flux:heading>
