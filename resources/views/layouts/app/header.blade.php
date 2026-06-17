@@ -9,15 +9,21 @@
 
             <x-app-logo href="{{ route('home') }}" wire:navigate />
 
-            <flux:spacer />
-
             @if(auth()->user() && auth()->user()->is_admin)
                 <flux:navbar class="-mb-px max-lg:hidden">
-                    <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                    <flux:navbar.item icon="home" :href="route('home')" :current="request()->routeIs('home')" wire:navigate>
+                        {{ __('Home') }}
+                    </flux:navbar.item>
+                    <flux:navbar.item icon="layout-grid" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
+                    </flux:navbar.item>
+                    <flux:navbar.item icon="user-group" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
+                        {{ __('Users') }}
                     </flux:navbar.item>
                 </flux:navbar>
             @endif
+
+            <flux:spacer />
 
             @auth
                 <x-desktop-user-menu />
@@ -35,11 +41,18 @@
             </flux:sidebar.header>
 
             @if(auth()->user() && auth()->user()->is_admin)
-                <flux:navbar class="-mb-px max-lg:hidden">
-                    <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                <flux:sidebar.item icon="home" :href="route('home')" :current="request()->routeIs('home')" wire:navigate>
+                    {{ __('Home') }}
+                </flux:sidebar.item>
+
+                <flux:sidebar.group :heading="__('Admin')">
+                    <flux:sidebar.item icon="layout-grid" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
-                    </flux:navbar.item>
-                </flux:navbar>
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="user-group" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
+                        {{ __('Users') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
             @endif
         </flux:sidebar>
 

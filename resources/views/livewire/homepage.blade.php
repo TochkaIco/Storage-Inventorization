@@ -2,6 +2,9 @@
 
     {{-- Header & Core Controls --}}
     <div class="max-w-6xl mx-auto mb-8">
+        <flux:breadcrumbs class="mb-6">
+            <flux:breadcrumbs.item href="{{ route('home') }}" icon="home" />
+        </flux:breadcrumbs>
         <div class="flex items-center justify-between gap-4 mb-6">
             <div>
                 <flux:heading size="xl" level="1">Inventory</flux:heading>
@@ -16,15 +19,77 @@
             @endif
         </div>
 
-        {{-- Search Input --}}
-        <div class="w-full max-w-xl">
-            <flux:input
-                wire:model.live.debounce.150ms="search"
-                view="search"
-                placeholder="{{ __('Search inventory...') }}"
-                icon="magnifying-glass"
-                clearable
-            />
+        <div class="flex items-center space-x-3 justify-between">
+            {{-- Search Input --}}
+            <div class="flex-1 w-full">
+                <flux:input
+                    wire:model.live.debounce.150ms="search"
+                    view="search"
+                    placeholder="{{ __('Search inventory...') }}"
+                    icon="magnifying-glass"
+                    clearable
+                />
+            </div>
+
+            <flux:dropdown class="shrink-0">
+                <flux:button variant="subtle" icon-trailing="chevron-down">
+                    {{ __('Order by') }}
+                </flux:button>
+
+                <flux:menu class="w-48">
+                    {{-- Group A: Chronological --}}
+                    <flux:menu.heading>{{ __('Date Added') }}</flux:menu.heading>
+                    <flux:menu.item
+                        icon="arrow-down"
+                        wire:click="setOrder('created_at', 'desc')"
+                        class="{{ $orderBy === 'created_at' && $orderDirection === 'desc' ? 'bg-zinc-100 dark:bg-zinc-800 font-medium' : '' }}"
+                    >
+                        {{ __('Newest first') }}
+                    </flux:menu.item>
+                    <flux:menu.item
+                        icon="arrow-up"
+                        wire:click="setOrder('created_at', 'asc')"
+                        class="{{ $orderBy === 'created_at' && $orderDirection === 'asc' ? 'bg-zinc-100 dark:bg-zinc-800 font-medium' : '' }}"
+                    >
+                        {{ __('Oldest first') }}
+                    </flux:menu.item>
+
+                    <flux:menu.separator />
+
+                    {{-- Group B: Quantities --}}
+                    <flux:menu.heading>{{ __('Stock Levels') }}</flux:menu.heading>
+                    <flux:menu.item
+                        icon="bars-arrow-down"
+                        wire:click="setOrder('quantity', 'desc')"
+                        class="{{ $orderBy === 'quantity' && $orderDirection === 'desc' ? 'bg-zinc-100 dark:bg-zinc-800 font-medium' : '' }}"
+                    >
+                        {{ __('Highest quantity') }}
+                    </flux:menu.item>
+                    <flux:menu.item
+                        icon="bars-arrow-up"
+                        wire:click="setOrder('quantity', 'asc')"
+                        class="{{ $orderBy === 'quantity' && $orderDirection === 'asc' ? 'bg-zinc-100 dark:bg-zinc-800 font-medium' : '' }}"
+                    >
+                        {{ __('Lowest quantity') }}
+                    </flux:menu.item>
+
+                    <flux:menu.separator />
+
+                    {{-- Group C: Alphabetical --}}
+                    <flux:menu.heading>{{ __('Product Name') }}</flux:menu.heading>
+                    <flux:menu.item
+                        icon="bars-3"
+                        wire:click="setOrder('name', 'asc')"
+                        class="{{ $orderBy === 'name' && $orderDirection === 'asc' ? 'bg-zinc-100 dark:bg-zinc-800 font-medium' : '' }}"
+                    >
+                        {{ __('A to Z') }}
+                    </flux:menu.item>
+                </flux:menu>
+            </flux:dropdown>
+
+            <div class="shrink-0">
+                <flux:button variant="subtle" icon="adjustments-horizontal" />
+            </div>
         </div>
     </div>
 
@@ -67,6 +132,8 @@
                         </div>
                     </div>
                 @endforeach
+
+                <flux:pagination :paginator="$items" scroll-to />
             </div>
         @endif
 

@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('inventory_items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image_path')->nullable();
+            $table->longText('description')->nullable();
             $table->string('sku')->unique();
+            $table->json('specifications');
             $table->integer('quantity')->default(0);
             $table->foreignId('location_id')->constrained('locations');
             $table->timestamps();
